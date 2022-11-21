@@ -10,13 +10,14 @@ import UIKit
 fileprivate let searchBarHeight : Int = 40
 
 class ViewController: UIViewController {
-
+    
     var tableView: UITableView?
     let network: NetworkManager
-    let pokemon: [Pokemon] = []
+    let url = URL(string: "https://pokeapi.co/api/v2/pokemon")
     var poke: [Sprite] = []
     var pageResults: [NameLink] = []
-    var kind: [Types] = []
+    var currentPage : PageResult?
+
     
     
     init(network: NetworkManager = NetworkManager()) {
@@ -32,14 +33,14 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
- 
-
+        
+        
         self.setUpUI()
         
         let path = "https://pokeapi.co/api/v2/pokemon"
         self.network.fetchPageResult(with: path) { page in
             guard let page = page else { return }
-//            self.pageResults = page.results
+            //            self.pageResults = page.results
             self.pageResults.append(contentsOf: page.results)
             print(page)
             
@@ -52,34 +53,67 @@ class ViewController: UIViewController {
         
     }
     
+//    private func requestNextPage(){
+//           let pageUrl : URL?
+//           if let currentPage = self.currentPage{
+//               pageUrl = currentPage.next
+//           }
+//           else{
+//               pageUrl = self.url
+//           }
+//           guard let pageUrl = pageUrl else {
+//               return
+//           }
+//           self.network.fetchPageResult(with: pageUrl){
+//               (resultPage : Result<PageResult, NetworkError>)  in
+////                           print(resultPage?.results[3].url as Any)
+////               guard let resultPage = resultPage else{
+////                   print("failed to fetch pageresult \(pageUrl)")
+////                   return
+////               }
+//               switch resultPage{
+//               case .success(let page):
+//                   self.currentPage = page
+//                   self.pageResults.append(contentsOf: page.results)
+//                   //
+//                   DispatchQueue.main.async {
+//                       self.tableView?.reloadData()
+//                   }
+//               case .failure(let error):
+//                   print(error)
+//               }
+//           }
+//       }
+
+    
+    
     private func setUpUI() {
         self.view.backgroundColor = .systemRed
-        
         let table = UITableView(frame: .zero)
         table.translatesAutoresizingMaskIntoConstraints = false
         table.backgroundColor = .white
         table.dataSource = self
         // MARK: Row Select delegate
-//        table.delegate = self
+        table.delegate = self
         table.register(PokemonTableViewCell.self, forCellReuseIdentifier: "PokemonCell")
         
         // add view to view hierarchy
         self.view.addSubview(table)
         
-
+        
         
         table.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         table.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 8).isActive = true
         table.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -8).isActive = true
         table.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -8).isActive = true
-
-       self.tableView = table
+        
+        self.tableView = table
         
     }
     
-    func requestNextpage(){
-
+    
 }
+
 
 extension ViewController: UITableViewDataSource {
     
@@ -138,13 +172,25 @@ extension ViewController: UITableViewDataSource {
         
 }
 //  MARK: Row Select funtion
-//extension ViewController: UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let placeholderVC = PokemonDetailVC(poke: self.poke[indexPath.row])
-//        self.navigationController?.pushViewController(placeholderVC, animated: true)
-//
-//
-//
-//    }
-//}
+extension ViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let placeholderVC = PokemonDetailVC()
+        
+        
+        
+        
+        
+//        placeholderVC.pokeImageView = UIImageView()
+        
+        placeholderVC.pokeNameLabel.text = "\(pageResults[indexPath.row].name)"
+//        self.network.fetchRawData(with: pageResults[indexPath.row].url ?? "front_default") { image in
+//        }
+//        placeholderVC.pokeImageView.image = poke[indexPath.row].frontDefault
+        self.navigationController?.pushViewController(placeholderVC, animated: true)
+        
+
+
+    }
+}
 //    
+

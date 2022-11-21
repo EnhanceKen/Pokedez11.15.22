@@ -23,7 +23,7 @@ class NetworkManager {
     //
     static let shared = NetworkManager()
 
-    let baseURL = URL(string: "https://pokeapi.co/api/v2/pokemon?offset=0&limit=30")!
+    let baseURL = URL(string: "https://pokeapi.co/api/v2/pokemon")!
     var pokemon: Pokemon?
     
 
