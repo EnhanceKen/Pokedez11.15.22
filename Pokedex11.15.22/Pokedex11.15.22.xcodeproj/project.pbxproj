@@ -20,6 +20,7 @@
 		02E0962829283A3B00FE7E29 /* UIView++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E0962729283A3B00FE7E29 /* UIView++.swift */; };
 		02E0962A292861B300FE7E29 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E09629292861B300FE7E29 /* ImageCache.swift */; };
 		02E9450B292ACF5900B83571 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E9450A292ACF5900B83571 /* NetworkError.swift */; };
+		02E9450F292C0E4F00B83571 /* NetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E9450E292C0E4F00B83571 /* NetworkConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		02E0962729283A3B00FE7E29 /* UIView++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView++.swift"; sourceTree = "<group>"; };
 		02E09629292861B300FE7E29 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		02E9450A292ACF5900B83571 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		02E9450E292C0E4F00B83571 /* NetworkConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 				02E096212927FE2B00FE7E29 /* NetworkController.swift */,
 				02E09629292861B300FE7E29 /* ImageCache.swift */,
 				02E9450A292ACF5900B83571 /* NetworkError.swift */,
+				02E9450E292C0E4F00B83571 /* NetworkConstants.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -201,6 +204,7 @@
 			files = (
 				02E0962829283A3B00FE7E29 /* UIView++.swift in Sources */,
 				02E096262927FEAB00FE7E29 /* Pokemon.swift in Sources */,
+				02E9450F292C0E4F00B83571 /* NetworkConstants.swift in Sources */,
 				02E096222927FE2B00FE7E29 /* NetworkController.swift in Sources */,
 				02E0962A292861B300FE7E29 /* ImageCache.swift in Sources */,
 				02E0960B2927FD8C00FE7E29 /* ViewController.swift in Sources */,

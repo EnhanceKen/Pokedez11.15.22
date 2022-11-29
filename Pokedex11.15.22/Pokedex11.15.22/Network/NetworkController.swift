@@ -63,7 +63,6 @@ extension NetworkManager {
         
         let task = self.session.dataTask(with: url) { data, response, error in
             
-            // TODO: implement more error handling
             
             guard let data = data else {
                 completion(nil)
@@ -93,7 +92,6 @@ extension NetworkManager {
         
         let task = self.session.dataTask(with: url) { data, response, error in
             
-            // TODO: implement more error handling
             
             completion(data)
             
@@ -113,7 +111,6 @@ extension NetworkManager {
         
         let task = self.session.dataTask(with: url) { data, response, error in
             
-            // TODO: implement more error handling
             
             guard let data = data else {
                 completion(nil)
