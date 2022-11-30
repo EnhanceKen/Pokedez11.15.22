@@ -8,5 +8,5 @@
 import Foundation
 
 struct NetworkConstants {
-    static let basePokePath = "https://pokeapi.co/api/v2/pokemon"
+    static let basePokePath = "https://pokeapi.co/api/v2/pokemon/"
 }

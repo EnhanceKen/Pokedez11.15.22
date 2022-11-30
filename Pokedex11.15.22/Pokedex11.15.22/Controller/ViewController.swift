@@ -11,6 +11,19 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    lazy var pokemonTableView : UITableView = {
+        let tableView = UITableView(frame: .zero)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+//        tableView.contentMode = .scaleAspectFit
+        tableView.backgroundColor = .systemGray5
+        tableView.dataSource = self
+        tableView.delegate = self
+//        tableView.prefetchDataSource = self
+        tableView.register(PokemonTableViewCell.self, forCellReuseIdentifier: "PokemonCell")
+        
+        return tableView
+    }()
+    
     var tableView: UITableView?
     let network: NetworkManager
     let url = URL(string: "https://pokeapi.co/api/v2/pokemon")
@@ -25,7 +38,8 @@ class ViewController: UIViewController {
         self.network = network
         super.init(nibName: nil, bundle: nil)
         self.setUpUI()
-        
+        self.requestNextPage()
+
     }
     
     required init?(coder: NSCoder) {
@@ -40,21 +54,65 @@ class ViewController: UIViewController {
         
         let path = "https://pokeapi.co/api/v2/pokemon"
         self.network.fetchPageResult(with: path) { page in
-            guard let page = page else { return }
-            //            self.pageResults = page.results
-            self.pageResults.append(contentsOf: page.results)
-            print(page)
             
-            DispatchQueue.main.async {
-                self.tableView?.reloadData()
+            switch page {
+            case .success(let pr):
+//                guard let page = page else { return }
+//                            self.pageResults = page.results
+                self.pageResults.append(contentsOf: pr.results)
+                
+                DispatchQueue.main.async {
+                    self.tableView?.reloadData()
+                }
+            case .failure(let error):
+                print("\(error)")
             }
-            
-            
+//            guard let page = page else { return }
+//                        self.pageResults = page.results
+//            self.pageResults.append(contentsOf: page.results)
+//            print(page)
+//
+//            DispatchQueue.main.async {
+//                self.tableView?.reloadData()
+//            }
+
         }
-        
+      self.requestNextPage()
+
+
     }
     
-    
+    private func requestNextPage(){
+            let pageUrl : URL?
+//            if let currentPage = self.currentPage{
+//                pageUrl = currentPage.next
+//            }
+//            else{
+                pageUrl = self.url
+//            }
+            guard let pageUrl = pageUrl else {
+                return
+            }
+        print("page url is: \(pageUrl)")
+        
+        self.network.fetchPageResult(with: "\(pageUrl)?offset=\(offset)&limit=\(limit)"){
+                (resultPage : Result<PageResult, NetworkError>) in
+
+                switch resultPage{
+                case .success(let pr):
+//                    self.currentPage = page
+                    self.pageResults.append(contentsOf: pr.results)
+                    self.offset += self.limit
+                    //
+                    DispatchQueue.main.async {
+                        self.pokemonTableView.reloadData()
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+
     
     
     
@@ -68,7 +126,7 @@ class ViewController: UIViewController {
         // MARK: Row Select delegate
         table.delegate = self
         table.register(PokemonTableViewCell.self, forCellReuseIdentifier: "PokemonCell")
-        
+
         self.view.addSubview(table)
         
         table.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
@@ -153,7 +211,7 @@ extension ViewController: UITableViewDelegate {
         self.network.fetchPokemon(with:(url)) { data in
             
             guard let data = data else { return }
-            let name = data.name
+//            let name = data.name
             DispatchQueue.main.asyncAfter(deadline: .now()) {
 
                 guard let imageUrl = data.sprites.frontDefault else{return}
@@ -177,3 +235,11 @@ extension ViewController: UITableViewDelegate {
 
 
 
+extension ViewController : UITableViewDataSourcePrefetching{
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        let lastIndexPath = IndexPath(row: self.pageResults.count - 2, section: 0)
+//        print(lastIndexPath)
+        guard indexPaths.contains(lastIndexPath) else { return }
+        self.requestNextPage()
+    }
+}

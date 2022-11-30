@@ -54,10 +54,10 @@ class NetworkManager {
 }
 extension NetworkManager {
     //Fetch Page Result
-    func fetchPageResult(with urlStr: String, completion: @escaping (PageResult?) -> Void) {
+    func fetchPageResult(with urlStr: String, completion: @escaping (Result<PageResult, NetworkError>) -> Void) {
         
         guard let url = URL(string: urlStr) else {
-            completion(nil)
+            completion(.failure(.badURL))
             return
         }
         
@@ -65,16 +65,16 @@ extension NetworkManager {
             
             
             guard let data = data else {
-                completion(nil)
+                completion(.failure(.badData))
                 return
             }
             
             do {
                 let pageResult = try JSONDecoder().decode(PageResult.self, from: data)
-                completion(pageResult)
+                completion(.success(pageResult))
             } catch {
                 print(error)
-                completion(nil)
+                completion(.failure(.decodeFailure(error as! DecodingError)))
             }
             
         }
